@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Information</title>
+     <!-- <link rel="stylesheet" href="styles.css"> -->
+<style type="text/css">
+ html, body{
+     /* background-image: url('../img/accounting-banner-new.webp'); */
+     background-image: linear-gradient(to bottom right, #ffffff,#459594);
+     background-repeat: no-repeat;
+  }
+.container {
+    max-width: 80%;
+    margin: 24px auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 10px darkblue;
+/*    border: 1px solid black;*/
+    box-shadow: 2px 2px 8px #9b2131,2px 2px 8px #9b2131,2px 2px 8px #9b2131;
+
+}
+
+.form-group {
+    margin: 10px;
+   display:inline-block ;
+   width: 45%;
+}
+.inline{
+
+    display: inline-block;
+    margin: 10px ;
+    width:45%;
+}
+
+#h1{ 
+    margin: 10px;
+    text-align: center;
+    color: black;
+    text-shadow: 8px 8px 8px #9b2131;
+
+}
+
+input[type="text"],
+input[type="number"],
+select {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: border 0.3s;
+        }
+
+.bdiv{
+    text-align: right;
+    margin-right: 150px;
+}
+       
+
+.button{
+    background-color: lightblue;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 90px;
+    height: 50px;
+}
+
+button#add-product:hover {
+    background-color: #5d8feb;
+}
+
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #ccc;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+.form-control{
+    width: 50%;
+}
+
+tbody>tr:hover{
+    background-color: #91a8d1;
+}
+</style>
+</head>
+<h1 id="h1"> Product Billing Form </h1>
+<body>
+    <div class="container">
+        <h1>Product Information</h1>
+        <form id="product-form">
+            <div class="inline">
+                <input class="form-control" type="text" id="product-name" name="product-name" placeholder="Product Name" required>
+            </div>
+            <div class="inline">
+                <select id="category" name="category" required style="margin: 10px;">
+                    <option value=""  >select category</option>
+                    <option value="furniture">Furniture</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="fashion">Fashion</option>
+                </select>
+            </div>
+         <br>
+            <div class="form-group">
+                <input type="number" id="quantity" name="quantity" placeholder="Quantity" required>
+            </div>
+            <div class="form-group">
+                <input type="number" id="rate" name="rate" placeholder="Rate" required>
+            </div>
+            <div class="bdiv">
+                <button class="button" type="button" id="add-product">OK</button>
+            </div>
+        </form>
+    </div>
+       
+    <div class="container">
+        <table id="product-table">
+            <thead>
+                <tr>
+                    <th>Sr. No.</th>
+                    <th>Product Name</th>
+                    <th>Category</th>
+                    <th>Rate</th>
+                    <th>Quantity</th>
+                    <th>Amount</th>
+                    <th>Discount</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot>
+        <tr>
+            <th colspan="4">Total:</th>
+            <th id="total-quantity">0</th>
+            <th id="total-amount">0</th>
+            <th id="total-discount">0</th>
+            <th id="total-total">0</th>
+        </tr>
+    </tfoot>
+    <!-- <p> I Created a product billing system using HTML, CSS, and JavaScript is a great way to develop a simple yet functional application for managing and calculating the cost of products or services. This project typically involves building a user-friendly interface for entering product details and quantities, performing real-time calculations, and generating a final bill or receipt. this is just grow my skills and develop my skills. </p> -->
+    <script type="text/javascript">
+        var form = document.getElementById("product-form");
+        var productNameInput = document.getElementById("product-name");
+        var categoryInput = document.getElementById("category");
+        var quantityInput = document.getElementById("quantity");
+        var rateInput = document.getElementById("rate");
+        var productTable = document.querySelector("table tbody");
+        var addButton = document.getElementById("add-product");
+        var totalQuantity = document.getElementById("total-quantity");
+        var totalAmount = document.getElementById("total-amount");
+        var totalDiscount = document.getElementById("total-discount");
+        var totalTotal = document.getElementById("total-total");
+        var serialNumber = 1;
+        var totalQuantityValue = 0;
+        var totalAmountValue = 0;
+        var totalDiscountValue = 0;
+        var totalTotalValue = 0;
+
+        addButton.addEventListener("click", function () {
+            var productName = productNameInput.value;
+            var category = categoryInput.value;
+            var quantity = parseInt(quantityInput.value);
+            var rate = parseFloat(rateInput.value);
+            var amount = quantity * rate;
+            var discount = 0;
+            if (category === "furniture") {
+                discount = 0.05 * amount;
+            } else if (category === "electronics") {
+                discount = 0.10 * amount;
+            } else if (category === "fashion") {
+                discount = 0.20 * amount;
+            }
+            totalQuantityValue += quantity;
+            totalAmountValue += amount;
+            totalDiscountValue += discount;
+            totalTotalValue += amount - discount;
+            var newRow = productTable.insertRow();
+            var datas = [
+                serialNumber++, productName, category, rate, quantity, amount, discount, amount - discount
+            ];
+            datas.forEach((dataValue, index) => {
+                var data = newRow.insertCell(index);
+                data.innerHTML = dataValue;
+            });
+            productNameInput.value = "";
+            categoryInput.value = "";
+            quantityInput.value = "";
+            rateInput.value = "";
+            totalQuantity.innerHTML = totalQuantityValue;
+            totalAmount.innerHTML = totalAmountValue.toFixed(2);
+            totalDiscount.innerHTML = totalDiscountValue.toFixed(2);
+            totalTotal.innerHTML = totalTotalValue.toFixed(2);
+        });
+    </script>
+</body>
+</html>
